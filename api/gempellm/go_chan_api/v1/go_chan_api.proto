@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+package gempellm.go_chan_api.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/gempellm/golang-chan/pkg/go_chan_api;go_chan_api";
+
+// GoChanApiService - Service for working with posts
+service GoChanApiService {
+
+    // DescribePost - Get post information by post id
+    rpc DescribePostV1(DescribePostV1Request) returns (DescribePostV1Response) {} 
+
+    // UploadPost - Upload post to go-chan
+    rpc CreatePostV1(CreatePostV1Request) returns (CreatePostV1Response) {} 
+
+    // ListPosts - Get list of attached posts by thread id
+    rpc ListPostsV1(ListPostsV1Request) returns (ListPostsV1Response) {} 
+
+    // RemovePost - Remove post by post id
+    rpc RemovePostV1(RemovePostV1Request) returns (RemovePostV1Response) {}
+
+}
+
+// Post - Basic go-chan unit
+message Post {
+    uint64 id = 1; // Post id
+    uint64 thread_id = 2; // Thread id, in which post uploaded
+    string title = 3; // Title of post
+    string msg = 4; // Message of post
+    google.protobuf.Timestamp created = 5; // Timestamp of post
+    Media media = 6; // Media attached to the post
+}
+
+// MediaType - Type of attached media
+enum MediaType {
+    TYPE_IMAGE = 0;
+    TYPE_VIDEO = 1;
+}
+
+// Media - Attached media to the post
+message Media {
+    repeated bytes file = 1;
+    repeated MediaType file_type = 2;
+}
+
+
+message DescribePostV1Request {
+    uint64 post_id = 1;
+}
+
+message DescribePostV1Response {
+    Post post = 1;
+}
+
+message CreatePostV1Request {
+    uint64 thread_id = 1;
+    string title = 2;
+    string msg = 3;
+    Media media = 4;
+}
+
+message CreatePostV1Response {
+    uint64 post_id = 1;
+}
+
+message ListPostsV1Request {
+    uint64 thread_id = 1;
+}
+
+message ListPostsV1Response {
+    repeated Post posts = 1;
+}
+
+message RemovePostV1Request {
+    uint64 post_id = 1;
+}
+
+message RemovePostV1Response {
+    bool found = 1;
+}

@@ -3,6 +3,7 @@ syntax = "proto3";
 package gempellm.go_chan_api.v1;
 
 import "google/protobuf/timestamp.proto";
+import "api/google/api/annotations.proto";
 
 option go_package = "github.com/gempellm/golang-chan/pkg/go_chan_api;go_chan_api";
 
@@ -10,16 +11,33 @@ option go_package = "github.com/gempellm/golang-chan/pkg/go_chan_api;go_chan_api
 service GoChanApiService {
 
     // DescribePost - Get post information by post id
-    rpc DescribePostV1(DescribePostV1Request) returns (DescribePostV1Response) {} 
+    rpc DescribePostV1(DescribePostV1Request) returns (DescribePostV1Response) {
+        option (google.api.http) = {
+            get: "/get/{post_id}"
+        };
+    } 
 
     // UploadPost - Upload post to go-chan
-    rpc CreatePostV1(CreatePostV1Request) returns (CreatePostV1Response) {} 
+    rpc CreatePostV1(CreatePostV1Request) returns (CreatePostV1Response) {
+        option (google.api.http) = {
+            post: "/post"
+            body: "*"
+        };
+    } 
 
     // ListPosts - Get list of attached posts by thread id
-    rpc ListPostsV1(ListPostsV1Request) returns (ListPostsV1Response) {} 
+    rpc ListPostsV1(ListPostsV1Request) returns (ListPostsV1Response) {
+        option (google.api.http) = {
+            get: "/thread/{thread_id}"
+        };
+    } 
 
     // RemovePost - Remove post by post id
-    rpc RemovePostV1(RemovePostV1Request) returns (RemovePostV1Response) {}
+    rpc RemovePostV1(RemovePostV1Request) returns (RemovePostV1Response) {
+        option (google.api.http) = {
+            delete: "/delete/{post_id}"
+        };
+    }
 
 }
 

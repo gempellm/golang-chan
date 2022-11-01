@@ -1,0 +1,287 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "api/gempellm/go_chan_api/v1/go_chan_api.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "GoChanApiService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/delete/{postId}": {
+      "delete": {
+        "summary": "RemovePost - Remove post by post id",
+        "operationId": "GoChanApiService_RemovePostV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1RemovePostV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "GoChanApiService"
+        ]
+      }
+    },
+    "/get/{postId}": {
+      "get": {
+        "summary": "DescribePost - Get post information by post id",
+        "operationId": "GoChanApiService_DescribePostV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1DescribePostV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "GoChanApiService"
+        ]
+      }
+    },
+    "/post": {
+      "post": {
+        "summary": "UploadPost - Upload post to go-chan",
+        "operationId": "GoChanApiService_CreatePostV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreatePostV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreatePostV1Request"
+            }
+          }
+        ],
+        "tags": [
+          "GoChanApiService"
+        ]
+      }
+    },
+    "/thread/{threadId}": {
+      "get": {
+        "summary": "ListPosts - Get list of attached posts by thread id",
+        "operationId": "GoChanApiService_ListPostsV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListPostsV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "threadId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "GoChanApiService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1CreatePostV1Request": {
+      "type": "object",
+      "properties": {
+        "threadId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "title": {
+          "type": "string"
+        },
+        "msg": {
+          "type": "string"
+        },
+        "media": {
+          "$ref": "#/definitions/v1Media"
+        }
+      }
+    },
+    "v1CreatePostV1Response": {
+      "type": "object",
+      "properties": {
+        "postId": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "v1DescribePostV1Response": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "$ref": "#/definitions/v1Post"
+        }
+      }
+    },
+    "v1ListPostsV1Response": {
+      "type": "object",
+      "properties": {
+        "posts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Post"
+          }
+        }
+      }
+    },
+    "v1Media": {
+      "type": "object",
+      "properties": {
+        "file": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "fileType": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1MediaType"
+          }
+        }
+      },
+      "title": "Media - Attached media to the post"
+    },
+    "v1MediaType": {
+      "type": "string",
+      "enum": [
+        "TYPE_IMAGE",
+        "TYPE_VIDEO"
+      ],
+      "default": "TYPE_IMAGE",
+      "title": "MediaType - Type of attached media"
+    },
+    "v1Post": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "threadId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "title": {
+          "type": "string"
+        },
+        "msg": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "media": {
+          "$ref": "#/definitions/v1Media"
+        }
+      },
+      "title": "Post - Basic go-chan unit"
+    },
+    "v1RemovePostV1Response": {
+      "type": "object",
+      "properties": {
+        "found": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

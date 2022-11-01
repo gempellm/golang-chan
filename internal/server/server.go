@@ -49,19 +49,19 @@ func (s *GrpcServer) Start(cfg *config.Config) error {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	// gatewayAddr := fmt.Sprintf("%s:%v", cfg.Rest.Host, cfg.Rest.Port)
+	gatewayAddr := fmt.Sprintf("%s:%v", cfg.Rest.Host, cfg.Rest.Port)
 	grpcAddr := fmt.Sprintf("%s:%v", cfg.Grpc.Host, cfg.Grpc.Port)
 	metricsAddr := fmt.Sprintf("%s:%v", cfg.Metrics.Host, cfg.Metrics.Port)
 
-	// gatewayServer := createGatewayServer(grpcAddr, gatewayAddr)
+	gatewayServer := createGatewayServer(grpcAddr, gatewayAddr)
 
-	// go func() {
-	// 	log.Info().Msgf("Gateway server is running on %s", gatewayAddr)
-	// 	if err := gatewayServer.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-	// 		log.Error().Err(err).Msg("Failed running gateway server")
-	// 		cancel()
-	// 	}
-	// }()
+	go func() {
+		log.Info().Msgf("Gateway server is running on %s", gatewayAddr)
+		if err := gatewayServer.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.Error().Err(err).Msg("Failed running gateway server")
+			cancel()
+		}
+	}()
 
 	metricsServer := createMetricsServer(cfg)
 
@@ -142,11 +142,11 @@ func (s *GrpcServer) Start(cfg *config.Config) error {
 
 	isReady.Store(false)
 
-	// if err := gatewayServer.Shutdown(ctx); err != nil {
-	// 	log.Error().Err(err).Msg("gatewayServer.Shutdown")
-	// } else {
-	// 	log.Info().Msg("gatewayServer shut down correctly")
-	// }
+	if err := gatewayServer.Shutdown(ctx); err != nil {
+		log.Error().Err(err).Msg("gatewayServer.Shutdown")
+	} else {
+		log.Info().Msg("gatewayServer shut down correctly")
+	}
 
 	if err := statusServer.Shutdown(ctx); err != nil {
 		log.Error().Err(err).Msg("statusServer.Shutdown")
